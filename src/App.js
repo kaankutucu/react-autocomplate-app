@@ -10,7 +10,7 @@ const data = [
 
     {
         id: 2,
-        title:"Test 2"
+        title:"Tesst 2"
     },
 
     {
