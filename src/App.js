@@ -1,6 +1,7 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, useRef} from "react";
 import './App.css';
 import './index.css'
+import {isLabelWithInternallyDisabledControl} from "@testing-library/user-event/dist/utils";
 
 const data = [
     {
@@ -28,22 +29,45 @@ const data = [
 
 function App() {
   const [search, setSearch] = useState('')
-  const [result, setResult] = useState([])
+  const [result, setResult] = useState(false)
+    const searchRef = useRef()
+  const isTyping = search.replace(/\s+/, '').length > 0 ;
 
 
     useEffect(() => {
-        if (search) {
-          setResult(data.filter (item => item.title.contains(search)))
+        if (isTyping) {
+            const filteredResult = data.filter (item => item.title.toLowerCase().includes(search.toLowerCase()))
+          setResult(filteredResult.length > 0 ? filteredResult : false )
         }else {
-            setResult([])
+            setResult(false)
         }
     }, [search])
 
 
   return (
   <>
-      <div className="search">
-        <input placeholder="Search Something..." type="text" onChange={(e) => setSearch(e.target.value)}/>
+      <div className="search" ref={searchRef}>
+        <input className={isTyping ? 'typing' : null} placeholder="Search Something..." type="text" onChange={(e) => setSearch(e.target.value)}/>
+          { isTyping && (
+              <div className="search-result">
+                  {result && result.map(
+                      item => (
+                          <div key={item.id} className="search-result-item">
+                              {item.title}
+                          </div>
+                      )
+                  )}
+
+                  {
+                      !result && (
+                        <div className="result-not-found">
+                            "{search}"  is not found.
+                        </div>
+                      )
+                  }
+
+              </div>
+          )}
       </div>
   </>
   );
