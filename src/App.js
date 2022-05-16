@@ -73,7 +73,7 @@ function App() {
                         {
                             !result && (
                                 <div className="result-not-found">
-                                    "{search}" is not found.
+                                    "{search}" is not founda.
                                 </div>
                             )
                         }
